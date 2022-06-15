@@ -1,0 +1,16 @@
+@import "./Components/Item";
+
+*,
+*::after,
+*::before {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	outline: none;
+	border: none;
+}
+
+body {
+	background: #353535;
+	font-family: "open sans", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
