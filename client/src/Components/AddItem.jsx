@@ -1,4 +1,4 @@
-import { useState, useContext, useRef } from "react";
+import { useState, useContext } from "react";
 import axios from "axios";
 import ReactLoading from "react-loading";
 import { ItemsContext } from "../Contexts/ItemsContext";

@@ -1,4 +1,5 @@
 import { createContext, useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import axios from "axios";
 
 export const ItemsContext = createContext([]);
@@ -6,10 +7,15 @@ export const ItemsContext = createContext([]);
 export function ItemsContextWrapper(props) {
 	const [loading, setLoading] = useState(true);
 	const [items, setItems] = useState([]);
+	const [searchParams, setSearchParams] = useSearchParams();
 
 	useEffect(() => {
+		var url = "/api/items";
+		if (searchParams.get("search"))
+			url += "?search=" + searchParams.get("search");
+
 		axios
-			.get("/api/items")
+			.get(url)
 			.then((res) => {
 				setItems(res.data);
 			})
@@ -19,7 +25,7 @@ export function ItemsContextWrapper(props) {
 			.then(() => {
 				setLoading(false);
 			});
-	}, []);
+	}, [searchParams]);
 
 	return (
 		<>
