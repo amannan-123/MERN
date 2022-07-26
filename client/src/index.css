@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+	*,
+	*::after,
+	*::before {
+		@apply box-border m-0 p-0 outline-0;
+	}
+
+	body {
+		font-family: "exo", "open sans", "segoe ui";
+	}
+}
+
+@layer components {
+	#root {
+		@apply bg-[#cecece]  dark:bg-[#353535] min-h-screen;
+	}
+	.centered-flex {
+		@apply flex items-center justify-center;
+	}
+	.modal-inner {
+		@apply centered-flex flex-col gap-3 p-12 bg-black opacity-90;
+	}
+	.modal-input {
+		@apply w-full h-8 rounded-[5px] p-[5px];
+	}
+}

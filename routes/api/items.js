@@ -22,7 +22,7 @@ router.get("/", (req, res) => {
 router.post("/", (req, res) => {
 	const { name, price } = req.body;
 
-	if (!name || price <= 0) {
+	if (!name || price < 1) {
 		return res
 			.status(400)
 			.json({ message: "Please enter all required fields." });

@@ -7,7 +7,6 @@ import AddItem from "./AddItem";
 
 function Items() {
 	const [items, , loading] = useContext(ItemsContext);
-
 	const [modal, setModal] = useState(false);
 	const [search, setSearch] = useState("");
 	const [searchParams, setSearchParams] = useSearchParams();
@@ -38,25 +37,31 @@ function Items() {
 	};
 
 	return (
-		<div className="pos-rel">
-			<div className="top-div">
-				<button onClick={toggleModal}>Add New Item</button>
-				<form>
+		<div className="centered-flex justify-start flex-col max-w-3xl relative m-auto p-5 w-3/4">
+			<div className="top-div mb-4 h-11 w-full flex items-center justify-between">
+				<button
+					className="bg-white text-black dark:bg-black dark:text-white rounded-[15px] p-2 h-full border border-black dark:border-white"
+					disabled={loading}
+					onClick={toggleModal}
+				>
+					Add New Item
+				</button>
+				<form className="flex rounded-[15px] h-full border border-black dark:border-white overflow-hidden">
 					<input
-						type="text"
+						className="p-2 text-black dark:text-white bg-[white] dark:bg-[#1c1c1c] placeholder:text-gray-600"
+						type="search"
 						placeholder="Search"
 						onChange={(e) => {
 							setSearch(e.target.value);
 						}}
 						value={search}
 					/>
-					<button type="submit" onClick={onSearch}>
-						<svg
+					<button className="bg-[#cecece] dark:bg-black" disabled={loading} type="submit" onClick={onSearch}>
+						<svg className="w-11 p-1 fill-black dark:fill-white"
 							xmlns="http://www.w3.org/2000/svg"
 							viewBox="0 0 24 24"
 						>
 							<path
-								fill="#FFFFFF"
 								d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"
 							/>
 						</svg>
@@ -72,7 +77,7 @@ function Items() {
 					width={100}
 				/>
 			) : (
-				<div className="list-box">
+				<div className="flex flex-col rounded-[20px] border-black dark:border-white border-2 p-3 mt-1 w-full bg-white dark:bg-[#1c1c1c]">
 					{items.length > 0 ? (
 						<>
 							{items.map((item) => (
@@ -80,13 +85,13 @@ function Items() {
 							))}
 						</>
 					) : (
-						<h1>No items</h1>
+						<h1 className="text-black dark:text-white text-xl font-normal">No items</h1>
 					)}
 				</div>
 			)}
 
 			{modal && (
-				<div className="modal" ref={modalElem} onClick={closeModal}>
+				<div className="centered-flex absolute inset-0 font-[exo]" ref={modalElem} onClick={closeModal}>
 					<AddItem closeModal={closeModal} />
 				</div>
 			)}

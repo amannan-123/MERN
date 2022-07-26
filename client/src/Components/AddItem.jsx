@@ -39,10 +39,21 @@ function AddItem(props) {
 		<>
 			{adding ? (
 				<div className="modal-inner">
-				<ReactLoading type="spin" color="#fff" height={20} width={20} /></div>
+					<h2 className="text-white mb-2">Adding new item...</h2>
+					<ReactLoading
+						type="spin"
+						color="#fff"
+						height={20}
+						width={20}
+					/>
+				</div>
 			) : (
-				<form className="modal-inner" onSubmit={addFormSubmit}>
+				<form
+					className="modal-inner"
+					onSubmit={addFormSubmit}
+				>
 					<input
+						className="modal-input"
 						type="text"
 						placeholder="Item Name"
 						onChange={(e) => {
@@ -51,6 +62,7 @@ function AddItem(props) {
 						value={itemName}
 					/>
 					<input
+						className="modal-input"
 						type="number"
 						placeholder="Item Price"
 						onChange={(e) => {
@@ -58,7 +70,7 @@ function AddItem(props) {
 						}}
 						value={itemPrice}
 					/>
-					<button type="submit">Add</button>
+					<button className="modal-input bg-white text-black" type="submit">Add</button>
 				</form>
 			)}
 		</>

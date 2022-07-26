@@ -10,6 +10,7 @@ export function ItemsContextWrapper(props) {
 	const [searchParams, setSearchParams] = useSearchParams();
 
 	useEffect(() => {
+		setLoading(true);
 		var url = "/api/items";
 		if (searchParams.get("search"))
 			url += "?search=" + searchParams.get("search");
