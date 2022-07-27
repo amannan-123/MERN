@@ -26,9 +26,9 @@ function ListItem(props) {
 
 	return (
 		<div className="flex items-center justify-between border-solid border-b-2 border-black dark:border-white last:border-b-0">
-			<div className="text-black dark:text-white text-xl m-1">
+			<div className="text-black dark:text-white text-lg m-1">
 				<h1>{props.item.name}</h1>
-				<h2 className="text-sm text-gray-600 dark:text-gray-400">
+				<h2 className="text-xs text-gray-600 dark:text-gray-400">
 					Price: {props.item.price}
 				</h2>
 			</div>

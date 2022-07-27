@@ -9,6 +9,10 @@
 		@apply box-border m-0 p-0 outline-0;
 	}
 
+	html{
+		@apply text-base sm:text-lg md:text-xl;
+	}
+
 	body {
 		font-family: "exo", "open sans", "segoe ui";
 	}
