@@ -14,14 +14,16 @@ function ListItem(props) {
 		axios
 			.delete(`/api/items/${id}`)
 			.then(() => {
-				setItems(items.filter((item) => item._id !== id));
+				setItems((prevItems) =>
+					prevItems.filter((item) => item._id !== id)
+				)
 			})
 			.catch((err) => {
-				console.log(err);
+				console.log(err)
 			})
 			.then(() => {
-				setDeleting(false);
-			});
+				setDeleting(false)
+			})
 	};
 
 	return (
@@ -34,6 +36,7 @@ function ListItem(props) {
 			</div>
 			{deleting ? (
 				<ReactLoading
+					className="m-1"
 					type="spin"
 					height={20}
 					width={20}

@@ -7,7 +7,7 @@ function AddItem(props) {
 	const [items, setItems] = useContext(ItemsContext);
 
 	const [itemName, setItemName] = useState("");
-	const [itemPrice, setItemPrice] = useState(0);
+	const [itemPrice, setItemPrice] = useState(1);
 
 	const [adding, setAdding] = useState(false);
 
@@ -23,6 +23,7 @@ function AddItem(props) {
 				})
 				.catch((err) => {
 					console.log(err);
+					// console.log(err.response.data.message);
 				})
 				.then(() => {
 					setItemName("");
