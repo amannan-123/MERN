@@ -1,44 +1,45 @@
-// Source: https://github.com/fireship-io/tailwind-dashboard/blob/main/src/hooks/useDarkMode.jsx
-
+// Original Source: https://github.com/fireship-io/tailwind-dashboard/blob/main/src/hooks/useDarkMode.jsx
+// Modified for personal use!
 import { useEffect, useState } from 'react';
 
+const useDarkThemeByDefault = true;
+
 const useLocalStorage = (key, initialValue) => {
-  const [storedValue, setStoredValue] = useState(() => {
-    try {
-      const item = window.localStorage.getItem(key);
-      return item ? JSON.parse(item) : initialValue;
-    } catch (error) {
-      console.log(error);
-      return initialValue;
-    }
-  });
+	const [storedValue, setStoredValue] = useState(() => {
+		try {
+			const item = window.localStorage.getItem(key);
+			return item ? JSON.parse(item) : initialValue;
+		} catch (error) {
+			console.log(error);
+			return initialValue;
+		}
+	});
 
-  const setValue = (value) => {
-    try {
-      const valueToStore = value instanceof Function ? value(storedValue) : value;
-
-      setStoredValue(valueToStore);
-
-      window.localStorage.setItem(key, JSON.stringify(valueToStore));
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  return [storedValue, setValue];
+	const setValue = (value) => {
+		try {
+			const valueToStore = value instanceof Function ? value(storedValue) : value;
+			setStoredValue(valueToStore);
+			window.localStorage.setItem(key, JSON.stringify(valueToStore));
+		} catch (error) {
+			console.log(error);
+		}
+	};
+	return [storedValue, setValue];
 };
 
 const useDarkMode = () => {
-  const [enabled, setEnabled] = useLocalStorage('dark-theme');
-  const isEnabled = typeof enabledState === 'undefined' && enabled;
+	const [enabled, setEnabled] = useLocalStorage('dark-theme', useDarkThemeByDefault);
+	const isEnabled = typeof enabled === 'undefined' ? useDarkThemeByDefault : enabled;
 
-  useEffect(() => {
-    const className = 'dark';
-    const bodyClass = window.document.body.classList;
+	useEffect(() => {
+		const className = 'dark';
+		const bodyClass = window.document.body.classList;
 
-    isEnabled ? bodyClass.add(className) : bodyClass.remove(className);
-  }, [enabled, isEnabled]);
+		isEnabled ? bodyClass.add(className) : bodyClass.remove(className);
 
-  return [enabled, setEnabled];
+	}, [enabled, isEnabled]);
+
+	return [enabled, setEnabled];
 };
 
 export default useDarkMode;
