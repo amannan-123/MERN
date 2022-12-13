@@ -29,12 +29,8 @@ export function ItemsContextWrapper(props) {
 	}, [searchParams]);
 
 	return (
-		<>
-			<ItemsContext.Provider
-				value={[items, setItems, loading, setLoading]}
-			>
-				{props.children}
-			</ItemsContext.Provider>
-		</>
+		<ItemsContext.Provider value={[items, setItems, loading, setLoading]}>
+			{props.children}
+		</ItemsContext.Provider>
 	);
 }

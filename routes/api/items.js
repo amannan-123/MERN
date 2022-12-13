@@ -9,7 +9,7 @@ const Item = require("../../models/item");
 router.get("/", (req, res) => {
 	const { search } = req.query;
 	const name = new RegExp(search, "i");
-	
+
 	Item.find({ name: name })
 		.sort({ date: -1 })
 		.then((items) => res.json(items))

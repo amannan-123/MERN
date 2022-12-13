@@ -27,7 +27,7 @@ const useLocalStorage = (key, initialValue) => {
 	return [storedValue, setValue];
 };
 
-const useDarkMode = () => {
+export default function useDarkMode() {
 	const [enabled, setEnabled] = useLocalStorage('dark-theme', useDarkThemeByDefault);
 	const isEnabled = typeof enabled === 'undefined' ? useDarkThemeByDefault : enabled;
 
@@ -41,5 +41,3 @@ const useDarkMode = () => {
 
 	return [enabled, setEnabled];
 };
-
-export default useDarkMode;
