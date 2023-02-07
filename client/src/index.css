@@ -16,6 +16,10 @@
 	body {
 		font-family: "exo", "open sans", "segoe ui";
 	}
+
+	input{
+		font-family: "open sans", "segoe ui";
+	}
 }
 
 @layer components {
