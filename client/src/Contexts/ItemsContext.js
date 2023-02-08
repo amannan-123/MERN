@@ -12,11 +12,12 @@ export function ItemsContextWrapper(props) {
 	useEffect(() => {
 		setLoading(true);
 		var url = "/api/items";
+		var config = {};
 		if (searchParams.get("search"))
-			url += "?search=" + searchParams.get("search");
+			config = { params: { search: searchParams.get("search") } };
 
 		axios
-			.get(url)
+			.get(url, config)
 			.then((res) => {
 				setItems(res.data);
 			})

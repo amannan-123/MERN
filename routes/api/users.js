@@ -7,16 +7,17 @@ require("dotenv").config();
 const User = require("../../models/user");
 
 const generateToken = (id, role) => {
-	return jwt.sign({ id, role }, process.env.JWT_SECRET, { expiresIn: "1d" });
+	return jwt.sign({ id, role }, process.env.JWT_SECRET, { expiresIn: "7d" });
 };
 
 // @route   GET api/users
 // @desc    Get user using email and password
 // @access  Public
 router.get("/", (req, res) => {
-	const { email, password } = req.body;
+	const { email, password } = req.query;
 
 	if (!email || !password) {
+		console.log(req.params);
 		return res
 			.status(400)
 			.json({ message: "Please enter all required fields." });
@@ -39,6 +40,7 @@ router.get("/", (req, res) => {
 
 				res.json({
 					token: generateToken(user._id, user.role),
+					email: user.email,
 				});
 			});
 		})
@@ -83,6 +85,7 @@ router.post("/", async (req, res) => {
 		.then((user) => {
 			res.json({
 				token: generateToken(user._id, user.role),
+				email: user.email,
 			});
 		})
 		.catch((err) => {

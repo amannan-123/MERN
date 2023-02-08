@@ -1,14 +1,24 @@
-import React, { useState } from 'react'
+import axios from 'axios';
+import { useState, useContext } from 'react'
+import { AuthContext } from '../Contexts/AuthContext';
 
 export default function AuthForm({ type }) {
 
+	const [user, setUser] = useContext(AuthContext);
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+	const [role, setRole] = useState("user");
+	const [adminKey, setAdminKey] = useState("");
 	const [error, setError] = useState("");
+	const [loading, setLoading] = useState(false);
 
 	const handleSubmit = (e) => {
 
 		e.preventDefault();
+
+		console.log(user)
+
+		setError("")
 
 		if (email.trim().length === 0 || password.trim().length === 0) {
 			setError("Please enter all fields.");
@@ -30,9 +40,42 @@ export default function AuthForm({ type }) {
 				setError("Password must be at least 8 characters.");
 				return;
 			}
+
+			setLoading(true)
+
+			axios.post("/api/users", { email, password, adminKey, role })
+				.then((res) => {
+					console.log(res)
+					setUser(res.data);
+				})
+				.catch((err) => {
+					console.log(err)
+					setError(err.response.data.message)
+				})
+				.then(() => {
+					setLoading(false);
+				});
+		}
+		else {
+			setLoading(true)
+
+			axios.get("/api/users", {
+				params: { email: email, password }
+			})
+				.then((res) => {
+					console.log(res)
+					setUser(res.data);
+				})
+				.catch((err) => {
+					console.log(err)
+					setError(err.response.data.message)
+				})
+				.then(() => {
+					setLoading(false);
+				});
+
 		}
 
-		setError("");
 	};
 
 	return (
@@ -45,6 +88,7 @@ export default function AuthForm({ type }) {
 					<img
 						className="w-[400px] h-[400px]"
 						src="auth.svg"
+						alt="Auth"
 					/>
 				</div>
 
@@ -70,9 +114,40 @@ export default function AuthForm({ type }) {
 							onChange={(e) => setPassword(e.target.value)}
 						/>
 
+						{(type === "signup") && <>
+
+							<div className='flex'>
+								<label htmlFor="role"></label>
+								<select
+									id="role"
+									type="password"
+									maxLength={20}
+									className="w-full px-3 py-2 text-gray-700 dark:text-white bg-white dark:bg-gray-800 border border-solid border-gray-300 rounded focus:border-blue-600 transition ease-in-out"
+									placeholder="Password"
+									value={role}
+									onChange={(e) => setRole(e.target.value)}
+								>
+									<option value="user">User</option>
+									<option value="admin">Admin</option>
+								</select>
+							</div>
+
+							{(role === "admin") &&
+								<input
+									type="text"
+									maxLength={50}
+									className="w-full px-3 py-2 text-gray-700 dark:text-white bg-white dark:bg-gray-800 border border-solid border-gray-300 rounded focus:border-blue-600 transition ease-in-out"
+									placeholder="Admin Key"
+									value={adminKey}
+									onChange={(e) => setAdminKey(e.target.value)}
+								/>
+							}
+						</>}
+
 						<button
 							type="submit"
-							className="w-full py-2 bg-blue-600 text-white font-medium leading-snug uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg active:bg-blue-800 active:shadow-lg dark:shadow-gray-800 transition ease-in-out">
+							className="w-full py-2 bg-blue-600 text-white font-medium leading-snug uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg active:bg-blue-800 active:shadow-lg dark:shadow-gray-800 transition ease-in-out"
+							disabled={loading}>
 							{type === "signin" ? "Sign in" : "Sign up"}
 						</button>
 
