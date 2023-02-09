@@ -6,7 +6,7 @@ import { ThemeContext } from "../Contexts/ThemeContext";
 export default function Navbar() {
 	const [darkTheme, setDarkTheme] = useContext(ThemeContext);
 	const [user, setUser] = useContext(AuthContext);
-	const handleMode = () => setDarkTheme(!darkTheme);
+	const handleMode = () => setDarkTheme((oldTheme) => { return !oldTheme });
 	return (
 		<div className="flex items-center justify-between p-3 bg-white dark:bg-black">
 			<Link className="text-2xl dark:text-white text-black" to="/">Items List</Link>

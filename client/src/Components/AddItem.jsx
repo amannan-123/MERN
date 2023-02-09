@@ -2,9 +2,11 @@ import { useState, useContext } from "react";
 import axios from "axios";
 import ReactLoading from "react-loading";
 import { ItemsContext } from "../Contexts/ItemsContext";
+import { AuthContext } from "../Contexts/AuthContext";
 
 function AddItem(props) {
 	const [items, setItems] = useContext(ItemsContext);
+	const [user] = useContext(AuthContext);
 
 	const [itemName, setItemName] = useState("");
 	const [itemPrice, setItemPrice] = useState(1);
@@ -13,11 +15,23 @@ function AddItem(props) {
 
 	const addFormSubmit = (e) => {
 		e.preventDefault();
+
 		if (itemName.trim().length > 0) {
+
 			setAdding(true);
+
 			var newItem = { name: itemName, price: itemPrice };
+
+			var config = {};
+
+			if (user) {
+				config.headers = {
+					Authorization: `Bearer ${user.token}`,
+				};
+			}
+
 			axios
-				.post("/api/items", newItem)
+				.post("/api/items", newItem, config)
 				.then((res) => {
 					setItems([res.data, ...items]);
 				})

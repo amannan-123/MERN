@@ -3,16 +3,28 @@ import axios from "axios";
 import ReactLoading from "react-loading";
 import { ItemsContext } from "../Contexts/ItemsContext";
 import { ThemeContext } from "../Contexts/ThemeContext";
+import { AuthContext } from "../Contexts/AuthContext";
 
 function ListItem(props) {
-	const [items, setItems] = useContext(ItemsContext);
+	const [, setItems] = useContext(ItemsContext);
+	const [user] = useContext(AuthContext);
 	const [darkTheme] = useContext(ThemeContext);
 	const [deleting, setDeleting] = useState(false);
 
 	const delItem = (id) => {
+
 		setDeleting(true);
+
+		var config = {};
+
+		if (user) {
+			config.headers = {
+				Authorization: `Bearer ${user.token}`,
+			};
+		}
+
 		axios
-			.delete(`/api/items/${id}`)
+			.delete(`/api/items/${id}`, config)
 			.then(() => {
 				setItems((prevItems) =>
 					prevItems.filter((item) => item._id !== id)

@@ -1,7 +1,10 @@
 const express = require("express");
 const router = express.Router();
+const requireAuth = require("../../middlewares/requireAuth");
 
 const Item = require("../../models/item");
+
+router.use(requireAuth);
 
 // @route   GET api/items
 // @desc    Get all items
@@ -10,8 +13,8 @@ router.get("/", (req, res) => {
 	const { search } = req.query;
 	const name = new RegExp(search, "i");
 
-	Item.find({ name: name })
-		.sort({ date: -1 })
+	Item.find({ name })
+		.sort({ createdAt: -1 })
 		.then((items) => res.json(items))
 		.catch((err) => res.status(404).json({ message: err.message }));
 });
@@ -21,6 +24,7 @@ router.get("/", (req, res) => {
 // @access  Public
 router.post("/", (req, res) => {
 	const { name, price } = req.body;
+	const id = req.user;
 
 	if (!name || price < 1) {
 		return res
@@ -31,6 +35,7 @@ router.post("/", (req, res) => {
 	const newItem = new Item({
 		name,
 		price,
+		userId: id,
 	});
 
 	newItem

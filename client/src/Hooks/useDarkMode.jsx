@@ -13,7 +13,7 @@ export default function useDarkMode() {
 
 		isEnabled ? bodyClass.add(className) : bodyClass.remove(className);
 
-	}, [enabled, isEnabled]);
+	}, [isEnabled]);
 
 	return [enabled, setEnabled];
 };

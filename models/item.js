@@ -1,20 +1,24 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const itemSchema = new Schema({
-	name: {
-		type: String,
-		required: true,
+const itemSchema = new Schema(
+	{
+		name: {
+			type: String,
+			required: true,
+		},
+		price: {
+			type: Number,
+			required: true,
+		},
+		userId: {
+			type: Schema.Types.ObjectId,
+			ref: "User",
+			required: true,
+		}
 	},
-	price: {
-		type: Number,
-		required: true,
-	},
-	date: {
-		type: Date,
-		default: Date.now,
-	},
-});
+	{ timestamps: true }
+);
 
 itemSchema.index({ name: "text" });
 

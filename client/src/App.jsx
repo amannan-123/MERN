@@ -7,8 +7,8 @@ import {
 import Items from "./Components/Items";
 import SignIn from "./Components/SignIn";
 import SignUp from "./Components/SignUp";
-import { ItemsContextWrapper } from "./Contexts/ItemsContext.js";
-import { ThemeContextWrapper } from "./Contexts/ThemeContext.js";
+import { ItemsContextWrapper } from "./Contexts/ItemsContext";
+import { ThemeContextWrapper } from "./Contexts/ThemeContext";
 import { AuthContextWrapper } from "./Contexts/AuthContext";
 
 function App() {

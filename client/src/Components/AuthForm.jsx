@@ -4,9 +4,9 @@ import { AuthContext } from '../Contexts/AuthContext';
 
 export default function AuthForm({ type }) {
 
-	const [user, setUser] = useContext(AuthContext);
-	const [email, setEmail] = useState("");
-	const [password, setPassword] = useState("");
+	const [, setUser] = useContext(AuthContext);
+	const [email, setEmail] = useState("test@mern.com");
+	const [password, setPassword] = useState("12345678");
 	const [role, setRole] = useState("user");
 	const [adminKey, setAdminKey] = useState("");
 	const [error, setError] = useState("");
@@ -15,8 +15,6 @@ export default function AuthForm({ type }) {
 	const handleSubmit = (e) => {
 
 		e.preventDefault();
-
-		console.log(user)
 
 		setError("")
 
@@ -45,29 +43,26 @@ export default function AuthForm({ type }) {
 
 			axios.post("/api/users", { email, password, adminKey, role })
 				.then((res) => {
-					console.log(res)
 					setUser(res.data);
 				})
 				.catch((err) => {
-					console.log(err)
 					setError(err.response.data.message)
 				})
 				.then(() => {
 					setLoading(false);
 				});
 		}
-		else {
+		else if (type === "login") {
+
 			setLoading(true)
 
 			axios.get("/api/users", {
-				params: { email: email, password }
+				params: { email, password }
 			})
 				.then((res) => {
-					console.log(res)
 					setUser(res.data);
 				})
 				.catch((err) => {
-					console.log(err)
 					setError(err.response.data.message)
 				})
 				.then(() => {
