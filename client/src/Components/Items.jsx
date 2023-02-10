@@ -4,10 +4,9 @@ import { ItemsContext } from "../Contexts/ItemsContext";
 import { useSearchParams } from "react-router-dom";
 import ListItem from "./ListItem";
 import AddItem from "./AddItem";
-import Navbar from "./Navbar";
 
 function Items() {
-	const [items, , loading] = useContext(ItemsContext);
+	const [items, , loading, , error] = useContext(ItemsContext);
 	const [modal, setModal] = useState(false);
 	const [search, setSearch] = useState("");
 	const [searchParams, setSearchParams] = useSearchParams();
@@ -38,13 +37,18 @@ function Items() {
 	};
 
 	return (
-		<>
-			<Navbar />
-			<div className="centered-flex justify-start flex-col max-w-3xl relative m-auto p-5 w-3/4">
+
+		<div className={"h-full centered-flex justify-start flex-col relative m-auto" + (modal && " overflow-hidden")}>
+			{error &&
+				<div className="w-full text-red-500 text-center h-8 centered-flex bg-gray-200 dark:bg-gray-800 py-6">
+					{error}
+				</div>
+			}
+			<div className="max-w-3xl centered-flex flex-col p-5 w-3/4">
 				<div className="top-div mb-3 min-h-[38px] w-full flex items-center flex-wrap justify-between">
 					<button
 						className="text-sm bg-white text-black dark:bg-black dark:text-white rounded-xl p-2 h-full border border-black dark:border-white"
-						disabled={loading}
+						disabled={loading || error !== ""}
 						onClick={toggleModal}
 					>
 						Add New Item
@@ -97,17 +101,18 @@ function Items() {
 						)}
 					</div>
 				)}
-				{modal && (
-					<div
-						className="centered-flex absolute inset-0 font-[exo]"
-						ref={modalElem}
-						onClick={closeModal}
-					>
-						<AddItem closeModal={closeModal} />
-					</div>
-				)}
 			</div>
-		</>
+			{modal && (
+				<div
+					className="centered-flex absolute backdrop-blur-sm inset-0 bg-black/[0.5] dark:bg-white/[0.5]"
+					ref={modalElem}
+					onClick={closeModal}
+				>
+					<AddItem closeModal={closeModal} />
+				</div>
+			)}
+		</div>
+
 	);
 }
 

@@ -12,9 +12,12 @@ function AddItem(props) {
 	const [itemPrice, setItemPrice] = useState(1);
 
 	const [adding, setAdding] = useState(false);
+	const [error, setError] = useState("");
 
 	const addFormSubmit = (e) => {
 		e.preventDefault();
+
+		setError("");
 
 		if (itemName.trim().length > 0) {
 
@@ -34,27 +37,28 @@ function AddItem(props) {
 				.post("/api/items", newItem, config)
 				.then((res) => {
 					setItems([res.data, ...items]);
+					setItemName("");
+					setItemPrice(1);
+					props.closeModal(null);
+					setError("");
 				})
 				.catch((err) => {
-					console.log(err);
-					// console.log(err.response.data.message);
+					setError(err.response.data.message);
 				})
 				.then(() => {
-					setItemName("");
-					setItemPrice(0);
-					props.closeModal(null);
 					setAdding(false);
 				});
+
 		} else {
-			alert("Please enter a name");
+			setError("Please enter a name.");
 		}
 	};
 
 	return (
 		<>
 			{adding ? (
-				<div className="modal-inner">
-					<h2 className="text-white mb-2">Adding new item...</h2>
+				<div className="centered-flex gap-4 p-12 bg-black opacity-90">
+					<h2 className="text-white">Adding new item...</h2>
 					<ReactLoading
 						type="spin"
 						color="#fff"
@@ -64,7 +68,7 @@ function AddItem(props) {
 				</div>
 			) : (
 				<form
-					className="modal-inner"
+					className="centered-flex flex-col gap-3 p-10 bg-black opacity-90 rounded-lg"
 					onSubmit={addFormSubmit}
 				>
 					<input
@@ -86,6 +90,7 @@ function AddItem(props) {
 						value={itemPrice}
 					/>
 					<button className="modal-input bg-white text-black" type="submit">Add</button>
+					{error && <p className="text-red-500">{error}</p>}
 				</form>
 			)}
 		</>

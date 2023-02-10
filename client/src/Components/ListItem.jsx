@@ -6,7 +6,7 @@ import { ThemeContext } from "../Contexts/ThemeContext";
 import { AuthContext } from "../Contexts/AuthContext";
 
 function ListItem(props) {
-	const [, setItems] = useContext(ItemsContext);
+	const [, setItems, , , , setError] = useContext(ItemsContext);
 	const [user] = useContext(AuthContext);
 	const [darkTheme] = useContext(ThemeContext);
 	const [deleting, setDeleting] = useState(false);
@@ -31,7 +31,7 @@ function ListItem(props) {
 				)
 			})
 			.catch((err) => {
-				console.log(err)
+				setError(err.response.data.message);
 			})
 			.then(() => {
 				setDeleting(false)

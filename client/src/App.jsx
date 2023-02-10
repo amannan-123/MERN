@@ -1,31 +1,29 @@
 import "./index.css";
 import {
-	BrowserRouter,
 	Routes,
-	Route
+	Route,
+	Navigate
 } from "react-router-dom";
+import { useContext } from "react";
 import Items from "./Components/Items";
 import SignIn from "./Components/SignIn";
 import SignUp from "./Components/SignUp";
-import { ItemsContextWrapper } from "./Contexts/ItemsContext";
-import { ThemeContextWrapper } from "./Contexts/ThemeContext";
-import { AuthContextWrapper } from "./Contexts/AuthContext";
+import Navbar from "./Components/Navbar";
+import { AuthContext } from "./Contexts/AuthContext";
 
 function App() {
+	const [user] = useContext(AuthContext);
 	return (
-		<BrowserRouter>
-			<ThemeContextWrapper>
-				<AuthContextWrapper>
-					<ItemsContextWrapper>
-						<Routes>
-							<Route path="/" element={<Items />} />
-							<Route path="signin" element={<SignIn />} />
-							<Route path="signup" element={<SignUp />} />
-						</Routes>
-					</ItemsContextWrapper>
-				</AuthContextWrapper>
-			</ThemeContextWrapper>
-		</BrowserRouter>
+		<div className="flex flex-col h-screen overflow-hidden">
+			<Navbar />
+			<div className="flex-1 overflow-auto">
+				<Routes>
+					<Route path="/" element={<Items />} />
+					<Route path="signin" element={user == null ? <SignIn /> : <Navigate to="/" />} />
+					<Route path="signup" element={user == null ? <SignUp /> : <Navigate to="/" />} />
+				</Routes>
+			</div>
+		</div>
 	);
 }
 

@@ -8,12 +8,14 @@ export const ItemsContext = createContext([]);
 export function ItemsContextWrapper(props) {
 	const [loading, setLoading] = useState(true);
 	const [items, setItems] = useState([]);
+	const [error, setError] = useState("");
 	const [searchParams] = useSearchParams();
 	const [user] = useContext(AuthContext);
 
 	useEffect(() => {
 
 		setLoading(true);
+		setError("");
 
 		if (user != null) {
 
@@ -32,13 +34,14 @@ export function ItemsContextWrapper(props) {
 					setItems(res.data);
 				})
 				.catch((err) => {
-					console.log(err);
+					setError(err.response.data.message)
 				})
 				.then(() => {
 					setLoading(false);
 				});
 
 		} else {
+			setError("You must be logged in to view items.");
 			setItems([]);
 			setLoading(false);
 		}
@@ -46,7 +49,7 @@ export function ItemsContextWrapper(props) {
 	}, [searchParams, user]);
 
 	return (
-		<ItemsContext.Provider value={[items, setItems, loading, setLoading]}>
+		<ItemsContext.Provider value={[items, setItems, loading, setLoading, error, setError]}>
 			{props.children}
 		</ItemsContext.Provider>
 	);

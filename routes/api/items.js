@@ -13,7 +13,10 @@ router.get("/", (req, res) => {
 	const { search } = req.query;
 	const name = new RegExp(search, "i");
 
-	Item.find({ name })
+	var filter = { name };
+	if (req.user.role === "user") filter.userId = req.user.id;
+
+	Item.find(filter)
 		.sort({ createdAt: -1 })
 		.then((items) => res.json(items))
 		.catch((err) => res.status(404).json({ message: err.message }));
@@ -24,7 +27,7 @@ router.get("/", (req, res) => {
 // @access  Public
 router.post("/", (req, res) => {
 	const { name, price } = req.body;
-	const id = req.user;
+	const id = req.user.id;
 
 	if (!name || price < 1) {
 		return res
@@ -49,7 +52,15 @@ router.post("/", (req, res) => {
 // @access  Public
 router.delete("/:id", (req, res) => {
 	Item.findById(req.params.id)
-		.then((item) => item.remove().then(() => res.json({ success: true })))
+		.then((item) => {
+			if (req.user.role === "admin" || item.userId === req.user.id) {
+				item.remove().then(() => res.json({ success: true }));
+			} else {
+				res.status(401).json({
+					message: "You are not authorized to delete this item.",
+				});
+			}
+		})
 		.catch((err) =>
 			res.status(404).json({
 				message: `Item with id ${req.params.id} doesn't exist.`,

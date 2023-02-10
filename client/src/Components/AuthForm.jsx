@@ -1,12 +1,13 @@
 import axios from 'axios';
+import ReactLoading from "react-loading";
 import { useState, useContext } from 'react'
 import { AuthContext } from '../Contexts/AuthContext';
 
 export default function AuthForm({ type }) {
 
 	const [, setUser] = useContext(AuthContext);
-	const [email, setEmail] = useState("test@mern.com");
-	const [password, setPassword] = useState("12345678");
+	const [email, setEmail] = useState("");
+	const [password, setPassword] = useState("");
 	const [role, setRole] = useState("user");
 	const [adminKey, setAdminKey] = useState("");
 	const [error, setError] = useState("");
@@ -52,7 +53,7 @@ export default function AuthForm({ type }) {
 					setLoading(false);
 				});
 		}
-		else if (type === "login") {
+		else if (type === "signin") {
 
 			setLoading(true)
 
@@ -141,9 +142,21 @@ export default function AuthForm({ type }) {
 
 						<button
 							type="submit"
-							className="w-full py-2 bg-blue-600 text-white font-medium leading-snug uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg active:bg-blue-800 active:shadow-lg dark:shadow-gray-800 transition ease-in-out"
+							className="w-full centered-flex py-2 bg-blue-600 text-white font-medium leading-snug uppercase rounded shadow-md hover:bg-blue-700 hover:shadow-lg active:bg-blue-800 active:shadow-lg dark:shadow-gray-800 transition ease-in-out"
 							disabled={loading}>
-							{type === "signin" ? "Sign in" : "Sign up"}
+							{loading ?
+								<ReactLoading
+									className="m-1"
+									type="spin"
+									height={20}
+									width={20}
+									color="white"
+								/> :
+								<>
+									{type === "signin" ? "Sign in" : "Sign up"}
+								</>
+							}
+
 						</button>
 
 						{(error && <span className='text-red-500 text-center'>{error}</span>)}
