@@ -12,7 +12,6 @@ function ListItem(props) {
 	const [deleting, setDeleting] = useState(false);
 
 	const delItem = (id) => {
-
 		setDeleting(true);
 
 		var config = {};
@@ -28,21 +27,21 @@ function ListItem(props) {
 			.then(() => {
 				setItems((prevItems) =>
 					prevItems.filter((item) => item._id !== id)
-				)
+				);
 			})
 			.catch((err) => {
 				setError(err.response.data.message);
 			})
 			.then(() => {
-				setDeleting(false)
-			})
+				setDeleting(false);
+			});
 	};
 
 	return (
 		<div className="flex items-center justify-between border-solid border-b-2 border-black dark:border-white last:border-b-0">
 			<div className="text-black dark:text-white text-lg m-1">
-				<h1>{props.item.name}</h1>
-				<h2 className="text-xs text-gray-600 dark:text-gray-400">
+				<h1 className="py-1">{props.item.name}</h1>
+				<h2 className="pb-1 text-xs text-gray-600 dark:text-gray-400">
 					Price: {props.item.price}
 				</h2>
 			</div>

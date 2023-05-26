@@ -1,9 +1,5 @@
 import "./index.css";
-import {
-	Routes,
-	Route,
-	Navigate
-} from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { useContext } from "react";
 import Items from "./Components/Items";
 import SignIn from "./Components/SignIn";
@@ -19,8 +15,19 @@ function App() {
 			<div className="flex-1 overflow-auto">
 				<Routes>
 					<Route path="/" element={<Items />} />
-					<Route path="signin" element={user == null ? <SignIn /> : <Navigate to="/" />} />
-					<Route path="signup" element={user == null ? <SignUp /> : <Navigate to="/" />} />
+					<Route path="/add" element={<Items />} />
+					<Route
+						path="signin"
+						element={
+							user == null ? <SignIn /> : <Navigate to="/" />
+						}
+					/>
+					<Route
+						path="signup"
+						element={
+							user == null ? <SignUp /> : <Navigate to="/" />
+						}
+					/>
 				</Routes>
 			</div>
 		</div>

@@ -1,4 +1,4 @@
-import { useState, useContext, useRef } from "react";
+import { useState, useContext, useRef, useEffect } from "react";
 import ReactLoading from "react-loading";
 import { ItemsContext } from "../Contexts/ItemsContext";
 import { useSearchParams } from "react-router-dom";
@@ -12,7 +12,21 @@ function Items() {
 	const [searchParams, setSearchParams] = useSearchParams();
 	const modalElem = useRef(null);
 
+	const isAdd = window.location.pathname === "/add";
+	useEffect(() => {
+		if (isAdd) {
+			setModal(true);
+		} else {
+			setModal(false);
+		}
+	}, [isAdd]);
+
 	const toggleModal = () => {
+		if (!modal) {
+			window.history.pushState({}, "", "/add");
+		} else {
+			window.history.pushState({}, "", "/");
+		}
 		setModal(!modal);
 	};
 
@@ -32,28 +46,33 @@ function Items() {
 	const closeModal = (event) => {
 		var modalElement = modalElem.current;
 		if (event === null || event.target === modalElement) {
+			window.history.pushState({}, "", "/");
 			setModal(false);
 		}
 	};
 
 	return (
-
-		<div className={"h-full centered-flex justify-start flex-col relative m-auto" + (modal && " overflow-hidden")}>
-			{error &&
+		<div
+			className={
+				"h-full centered-flex justify-start flex-col relative m-auto" +
+				(modal && " overflow-hidden")
+			}
+		>
+			{error && (
 				<div className="w-full text-red-500 text-center h-8 centered-flex bg-gray-200 dark:bg-gray-800 py-6">
 					{error}
 				</div>
-			}
+			)}
 			<div className="max-w-3xl centered-flex flex-col p-5 w-3/4">
-				<div className="top-div mb-3 min-h-[38px] w-full flex items-center flex-wrap justify-between">
+				<div className="top-div mb-3 w-full flex items-stretch flex-wrap gap-2 justify-between">
 					<button
-						className="text-sm bg-white text-black dark:bg-black dark:text-white rounded-xl p-2 h-full border border-black dark:border-white"
+						className="text-sm bg-white text-black dark:bg-black dark:text-white rounded-xl p-2 border border-black dark:border-white"
 						disabled={loading || error !== ""}
 						onClick={toggleModal}
 					>
 						Add New Item
 					</button>
-					<form className="flex rounded-xl h-full border border-black dark:border-white overflow-hidden">
+					<form className="flex rounded-xl border border-black dark:border-white overflow-hidden">
 						<input
 							className="text-sm p-2 text-black dark:text-white bg-[white] dark:bg-[#1c1c1c] placeholder:text-gray-600"
 							type="search"
@@ -112,7 +131,6 @@ function Items() {
 				</div>
 			)}
 		</div>
-
 	);
 }
 

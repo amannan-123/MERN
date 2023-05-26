@@ -6,10 +6,10 @@
 	*,
 	*::after,
 	*::before {
-		@apply box-border m-0 p-0 outline-0;
+		@apply leading-none outline-none;
 	}
 
-	html{
+	html {
 		@apply text-base sm:text-lg md:text-xl;
 	}
 
@@ -17,7 +17,7 @@
 		font-family: "exo", "open sans", "segoe ui";
 	}
 
-	input{
+	input {
 		font-family: "open sans", "segoe ui";
 	}
 }
