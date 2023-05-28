@@ -8,14 +8,17 @@ export default defineConfig({
 	server: {
 		proxy: {
 			"/api": {
-				target: "http://localhost:5000",
+				target: "http://backend:5000",
 				changeOrigin: true,
 				//log events
 				onProxyReq: (proxyReq, req, res) => {
 					console.log("proxying", req.url);
-				}
-				
+				},
 			},
 		},
+		//strict port to 5173
+		host: true,
+		strictPort: true,
+		port: 5173,
 	},
 });
