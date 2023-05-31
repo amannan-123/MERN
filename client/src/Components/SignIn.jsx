@@ -1,8 +1,5 @@
-import AuthForm from './AuthForm';
+import AuthForm from "./AuthForm";
 
 export default function SignIn() {
-
-	return (
-		<AuthForm type="signin"></AuthForm>
-	)
+	return <AuthForm type="signin" />;
 }

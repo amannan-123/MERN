@@ -8,7 +8,7 @@ import Navbar from "./Components/Navbar";
 import { AuthContext } from "./Contexts/AuthContext";
 
 function App() {
-	const [user] = useContext(AuthContext);
+	const {user} = useContext(AuthContext);
 	return (
 		<div className="flex flex-col h-screen overflow-hidden">
 			<Navbar />

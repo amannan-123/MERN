@@ -1,71 +1,68 @@
-const express = require("express");
-const router = express.Router();
-const requireAuth = require("../../middlewares/requireAuth");
+import express from "express";
+import requireAuth from "../../middlewares/requireAuth.js";
+import Item from "../../models/item.js";
 
-const Item = require("../../models/item");
+const router = express.Router();
 
 router.use(requireAuth);
 
-// @route   GET api/items
-// @desc    Get all items
-// @access  Public
-router.get("/", (req, res) => {
-	const { search } = req.query;
-	const name = new RegExp(search, "i");
+/// Get all items
+router.get("/", async (req, res) => {
+	try {
+		const { search } = req.query;
+		const nameRegex = new RegExp(search, "i");
 
-	var filter = { name };
-	if (req.user.role === "user") filter.userId = req.user.id;
+		const filter = {
+			name: nameRegex,
+			...(req.user.role === "user" && { userId: req.user.id }),
+		};
 
-	Item.find(filter)
-		.sort({ createdAt: -1 })
-		.then((items) => res.json(items))
-		.catch((err) => res.status(404).json({ message: err.message }));
-});
-
-// @route   POST api/items
-// @desc    Add a new item
-// @access  Public
-router.post("/", (req, res) => {
-	const { name, price } = req.body;
-	const id = req.user.id;
-
-	if (!name || price < 1) {
-		return res
-			.status(400)
-			.json({ message: "Please enter all required fields." });
+		const items = await Item.find(filter).sort({ createdAt: -1 });
+		res.json(items);
+	} catch (err) {
+		res.status(500).json({ message: err.message });
 	}
-
-	const newItem = new Item({
-		name,
-		price,
-		userId: id,
-	});
-
-	newItem
-		.save()
-		.then((item) => res.json(item))
-		.catch((err) => res.status(400).json({ message: err.message }));
 });
 
-// @route   DELETE api/items/:id
-// @desc    Delete an item
-// @access  Public
-router.delete("/:id", (req, res) => {
-	Item.findById(req.params.id)
-		.then((item) => {
-			if (req.user.role === "admin" || item.userId === req.user.id) {
-				item.remove().then(() => res.json({ success: true }));
-			} else {
-				res.status(401).json({
-					message: "You are not authorized to delete this item.",
-				});
-			}
-		})
-		.catch((err) =>
-			res.status(404).json({
-				message: `Item with id ${req.params.id} doesn't exist.`,
-			})
-		);
+// Add a new item
+router.post("/", async (req, res) => {
+	try {
+		const { name, price } = req.body;
+		const userId = req.user.id;
+
+		if (!name || price < 1) {
+			return res
+				.status(400)
+				.json({ message: "Please enter all required fields." });
+		}
+
+		const newItem = new Item({ name, price, userId });
+		const savedItem = await newItem.save();
+
+		res.json(savedItem);
+	} catch (err) {
+		res.status(500).json({ message: err.message });
+	}
 });
 
-module.exports = router;
+// Delete an item
+router.delete("/:id", async (req, res) => {
+	try {
+		const item = await Item.findOneAndRemove({
+			_id: req.params.id,
+			$or: [{ userId: req.user.id }, { role: "admin" }],
+		});
+
+		if (!item) {
+			return res.status(404).json({
+				message: `Item with id ${req.params.id} doesn't exist or you are not authorized to delete it.`,
+			});
+		}
+
+		res.json({ success: true });
+	} catch (err) {
+		res.status(500).json({ message: err.message });
+	}
+});
+
+export default router;

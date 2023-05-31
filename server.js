@@ -1,25 +1,28 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const cors = require("cors");
+import express from "express";
+import mongoose from "mongoose";
+import cors from "cors";
+import dotenv from "dotenv";
 
-require("dotenv").config();
+import itemRoutes from "./routes/api/items.js";
+import userRoutes from "./routes/api/users.js";
 
-mongoose
-	.connect(process.env.DB, {
-		useNewUrlParser: true,
-	})
-	.then(() => console.log("MongoDB Connected..."))
-	.catch((err) => console.log(err));
+dotenv.config();
+
+try {
+	await mongoose.connect(process.env.DB);
+	console.log("MongoDB Connected...");
+} catch (error) {
+	console.log(error);
+}
 
 const app = express();
 
 app.use(cors());
-
 app.use(express.json());
 
 //use routes
-app.use("/api/items", require("./routes/api/items"));
-app.use("/api/users", require("./routes/api/users"));
+app.use("/api/items", itemRoutes);
+app.use("/api/users", userRoutes);
 
 app.get("/", (req, res) => {
 	res.send("API Running");

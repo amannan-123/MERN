@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
+import mongoose from "mongoose";
+const { Schema } = mongoose;
 
 const itemSchema = new Schema(
 	{
@@ -22,4 +22,6 @@ const itemSchema = new Schema(
 
 itemSchema.index({ name: "text" });
 
-module.exports = Item = mongoose.model("Item", itemSchema);
+const Item = mongoose.model("Item", itemSchema);
+
+export default Item;

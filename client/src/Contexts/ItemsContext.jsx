@@ -10,15 +10,13 @@ export function ItemsContextWrapper(props) {
 	const [items, setItems] = useState([]);
 	const [error, setError] = useState("");
 	const [searchParams] = useSearchParams();
-	const [user] = useContext(AuthContext);
+	const {user} = useContext(AuthContext);
 
 	useEffect(() => {
-
 		setLoading(true);
 		setError("");
 
 		if (user != null) {
-
 			var url = "/api/items";
 
 			var config = {
@@ -34,22 +32,22 @@ export function ItemsContextWrapper(props) {
 					setItems(res.data);
 				})
 				.catch((err) => {
-					setError(err.response.data.message)
+					setError(err.response.data.message);
 				})
 				.then(() => {
 					setLoading(false);
 				});
-
 		} else {
 			setError("You must be logged in to view items.");
 			setItems([]);
 			setLoading(false);
 		}
-
 	}, [searchParams, user]);
 
 	return (
-		<ItemsContext.Provider value={[items, setItems, loading, setLoading, error, setError]}>
+		<ItemsContext.Provider
+			value={{ items, setItems, loading, setLoading, error, setError }}
+		>
 			{props.children}
 		</ItemsContext.Provider>
 	);

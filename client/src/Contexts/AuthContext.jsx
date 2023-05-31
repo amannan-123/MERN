@@ -8,10 +8,10 @@ export function AuthContextWrapper(props) {
 
 	const logout = () => {
 		setUser(null);
-	}
+	};
 
 	return (
-		<AuthContext.Provider value={[user, setUser, logout]}>
+		<AuthContext.Provider value={{ user, setUser, logout }}>
 			{props.children}
 		</AuthContext.Provider>
 	);

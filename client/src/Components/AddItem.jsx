@@ -5,8 +5,8 @@ import { ItemsContext } from "../Contexts/ItemsContext";
 import { AuthContext } from "../Contexts/AuthContext";
 
 function AddItem(props) {
-	const [items, setItems] = useContext(ItemsContext);
-	const [user] = useContext(AuthContext);
+	const { items, setItems } = useContext(ItemsContext);
+	const { user } = useContext(AuthContext);
 
 	const [itemName, setItemName] = useState("");
 	const [itemPrice, setItemPrice] = useState(1);
@@ -20,7 +20,6 @@ function AddItem(props) {
 		setError("");
 
 		if (itemName.trim().length > 0) {
-
 			setAdding(true);
 
 			var newItem = { name: itemName, price: itemPrice };
@@ -48,7 +47,6 @@ function AddItem(props) {
 				.then(() => {
 					setAdding(false);
 				});
-
 		} else {
 			setError("Please enter a name.");
 		}
@@ -89,7 +87,12 @@ function AddItem(props) {
 						}}
 						value={itemPrice}
 					/>
-					<button className="modal-input bg-white text-black" type="submit">Add</button>
+					<button
+						className="modal-input bg-white text-black"
+						type="submit"
+					>
+						Add
+					</button>
 					{error && <p className="text-red-500">{error}</p>}
 				</form>
 			)}

@@ -6,13 +6,14 @@ import { ThemeContext } from "../Contexts/ThemeContext";
 import { AuthContext } from "../Contexts/AuthContext";
 
 function ListItem(props) {
-	const [, setItems, , , , setError] = useContext(ItemsContext);
-	const [user] = useContext(AuthContext);
+	const { setItems, setError } = useContext(ItemsContext);
+	const { user } = useContext(AuthContext);
 	const [darkTheme] = useContext(ThemeContext);
 	const [deleting, setDeleting] = useState(false);
 
 	const delItem = (id) => {
 		setDeleting(true);
+		setError("");
 
 		var config = {};
 

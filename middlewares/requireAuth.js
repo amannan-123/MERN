@@ -1,26 +1,34 @@
-const jwt = require("jsonwebtoken");
-const User = require("../models/user");
+import jwt from "jsonwebtoken";
+import User from "../models/user.js";
 
 const requireAuth = async (req, res, next) => {
-	const { authorization } = req.headers;
-
-	if (!authorization) {
-		return res
-			.status(401)
-			.json({ message: "Authorization token required" });
-	}
-
-	const token = authorization.split(" ")[1];
-
 	try {
+		const { authorization } = req.headers;
+
+		if (!authorization) {
+			return res
+				.status(401)
+				.json({ message: "Authorization token required." });
+		}
+
+		const token = authorization.split(" ")[1];
+
 		const { id } = jwt.verify(token, process.env.JWT_SECRET);
-		req.user = await User.findOne({ _id: id });
+		const user = await User.findOne({ _id: id });
+
+		if (!user) {
+			return res
+				.status(401)
+				.json({ message: "User not found. Please log in again." });
+		}
+
+		req.user = user;
 		next();
 	} catch (error) {
 		res.status(401).json({
-			message: "Request is not authorized. Try logging in again.",
+			message: "Invalid token. Please log in again.",
 		});
 	}
 };
 
-module.exports = requireAuth;
+export default requireAuth;

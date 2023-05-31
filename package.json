@@ -2,6 +2,7 @@
 	"name": "items_list",
 	"version": "1.0.1",
 	"description": "Items List App",
+	"type": "module",
 	"main": "server.js",
 	"scripts": {
 		"start": "node server.js",
