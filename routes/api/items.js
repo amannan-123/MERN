@@ -48,15 +48,22 @@ router.post("/", async (req, res) => {
 // Delete an item
 router.delete("/:id", async (req, res) => {
 	try {
-		const item = await Item.findOneAndRemove({
+		const item = await Item.findOne({
 			_id: req.params.id,
-			$or: [{ userId: req.user.id }, { role: "admin" }],
 		});
 
 		if (!item) {
 			return res.status(404).json({
-				message: `Item with id ${req.params.id} doesn't exist or you are not authorized to delete it.`,
+				message: `Item with id ${req.params.id} doesn't exist.`,
 			});
+		} else {
+			if (item.userId !== req.user.id && req.user.role !== "admin") {
+				return res.status(401).json({
+					message: "You don't have permission to delete this item.",
+				});
+			} else {
+				await item.deleteOne();
+			}
 		}
 
 		res.json({ success: true });
