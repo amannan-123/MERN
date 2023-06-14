@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.use(requireAuth);
 
-/// Get all items
+// Get all items
 router.get("/", async (req, res) => {
 	try {
 		const { search } = req.query;
@@ -19,6 +19,62 @@ router.get("/", async (req, res) => {
 
 		const items = await Item.find(filter).sort({ createdAt: -1 });
 		res.json(items);
+	} catch (err) {
+		res.status(500).json({ message: err.message });
+	}
+});
+
+// Get one item
+router.get("/:id", async (req, res) => {
+	try {
+		const item = await Item.findOne({
+			_id: req.params.id,
+			...(req.user.role === "user" && { userId: req.user.id }),
+		});
+
+		if (!item) {
+			return res.status(404).json({
+				message: `Item with id '${req.params.id}' doesn't exist or you are not authorized to access it.`,
+			});
+		}
+
+		res.json(item);
+	} catch (err) {
+		res.status(500).json({ message: err.message });
+	}
+});
+
+// Update an item
+router.patch("/:id", async (req, res) => {
+	try {
+		const { name, price } = req.body;
+
+		if (!name || price < 1) {
+			return res
+				.status(400)
+				.json({ message: "Please enter all required fields." });
+		}
+
+		const item = await Item.findOne({
+			_id: req.params.id,
+		});
+
+		if (!item) {
+			return res.status(404).json({
+				message: `Item with id ${req.params.id} doesn't exist.`,
+			});
+		} else {
+			if (item.userId == req.user.id || req.user.role == "admin") {
+				item.name = name;
+				item.price = price;
+				const savedItem = await item.save();
+				res.json(savedItem);
+			} else {
+				return res.status(401).json({
+					message: "You don't have permission to update this item.",
+				});
+			}
+		}
 	} catch (err) {
 		res.status(500).json({ message: err.message });
 	}
